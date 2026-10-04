@@ -37,6 +37,13 @@ public class SubjectController {
         return ResponseEntity.status(HttpStatus.CREATED).body(subjectService.createSubject(subjectRequestDTO));
     }
 
+    @PostMapping(path = "/professors/{id}")
+    public ResponseEntity<SubjectResponseDTO> createSubjectWithProfessor(
+            @PathVariable(name = "id") Long professorId,
+            @RequestBody @Valid SubjectRequestDTO subjectRequestDTO){
+        return ResponseEntity.status(HttpStatus.CREATED).body(subjectService.createSubject(subjectRequestDTO, professorId));
+    }
+
     @PutMapping(path = "/{id}")
     public ResponseEntity<SubjectResponseDTO> updateSubject(@PathVariable(name = "id") Long subjectId,
                                                             @Valid @RequestBody SubjectRequestDTO subjectRequestDTO){
@@ -55,18 +62,16 @@ public class SubjectController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping(path = "/{subjectId}/professor/{professorId}")
+    @PutMapping(path = "/{subjectId}/professors/{professorId}")
     public ResponseEntity<SubjectResponseDTO> assignProfessorToSubject(@PathVariable Long subjectId,
                                                                        @PathVariable Long professorId){
         return ResponseEntity.ok(subjectService.assignProfessor(subjectId, professorId));
     }
 
-    @DeleteMapping(path = "/{subjectId}/professor")
+    @DeleteMapping(path = "/{subjectId}/professors")
     public ResponseEntity<SubjectResponseDTO> unassignProfessorFromSubject(@PathVariable Long subjectId){
         return ResponseEntity.ok(subjectService.unassignProfessor(subjectId));
     }
-
-
 }
 
 

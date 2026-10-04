@@ -8,6 +8,8 @@ import com.collegeManagementSystem.learning.entity.SubjectEntity;
 import com.collegeManagementSystem.learning.exception.ResourceNotFoundException;
 import com.collegeManagementSystem.learning.repository.ProfessorRepository;
 import com.collegeManagementSystem.learning.repository.SubjectRepository;
+import jakarta.validation.Valid;
+import org.jspecify.annotations.Nullable;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -28,6 +30,17 @@ public class SubjectService {
         SubjectEntity toBeSaveSubject = modelMapper.map(subjectRequestDTO, SubjectEntity.class);
         SubjectEntity savedEntity = subjectRepository.save(toBeSaveSubject);
         return entityToResponse(savedEntity);
+    }
+    @Transactional
+    public SubjectResponseDTO createSubject(SubjectRequestDTO dto, Long professorId) {
+        ProfessorEntity professor = professorRepository.findById(professorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Professor not found with id " + professorId));
+
+        SubjectEntity subject = modelMapper.map(dto, SubjectEntity.class);
+        professor.addSubject(subject);
+
+        SubjectEntity saved = subjectRepository.save(subject);
+        return entityToResponse(saved);
     }
 
     private SubjectResponseDTO entityToResponse(SubjectEntity subjectEntity){
@@ -100,7 +113,6 @@ public class SubjectService {
         }
         return entityToResponse(subjectEntity);
     }
-
 }
 
 
