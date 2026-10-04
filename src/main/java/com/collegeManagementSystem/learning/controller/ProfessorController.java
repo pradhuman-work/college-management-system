@@ -1,19 +1,15 @@
-package com.collegeManagementSystem.learning.Controller;
+package com.collegeManagementSystem.learning.controller;
 
 import com.collegeManagementSystem.learning.dto.ProfessorPatchDTO;
 import com.collegeManagementSystem.learning.dto.ProfessorRequestDTO;
 import com.collegeManagementSystem.learning.dto.ProfessorResponseDTO;
-import com.collegeManagementSystem.learning.repository.ProfessorRepository;
 import com.collegeManagementSystem.learning.service.ProfessorService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "/professors")

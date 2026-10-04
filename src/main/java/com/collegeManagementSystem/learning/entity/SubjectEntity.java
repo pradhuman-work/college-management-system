@@ -19,5 +19,5 @@ public class SubjectEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "professor_id")
-    private ProfessorEntity professorEntity; //Owning Side
+    private ProfessorEntity professor; //Owning Side
 }

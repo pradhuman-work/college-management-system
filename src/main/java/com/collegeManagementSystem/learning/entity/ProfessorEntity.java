@@ -20,20 +20,23 @@ public class ProfessorEntity {
 
     private String title;
 
-    @OneToMany(mappedBy = "professorEntity") //Inverse Side
-    private Set<SubjectEntity> subjectEntities = new HashSet<>();
+    @OneToMany(mappedBy = "professor") //Inverse Side
+    private Set<SubjectEntity> subjects = new HashSet<>();
 
     public void addSubject(SubjectEntity subjectEntity) {
+        if(subjectEntity.getProfessor()!=null){
+            subjectEntity.getProfessor().getSubjects().remove(subjectEntity);
+        }
         // 1. add subject to this.subjects
-        this.subjectEntities.add(subjectEntity);
+        this.subjects.add(subjectEntity);
         // 2. set the subject's professor to this professor
-        subjectEntity.setProfessorEntity(this);
+        subjectEntity.setProfessor(this);
     }
 
     public void removeSubject(SubjectEntity subjectEntity) {
         // 1. remove subject from this.subjects
-        this.subjectEntities.remove(subjectEntity);
+        this.subjects.remove(subjectEntity);
         // 2. set the subject's professor to null
-        subjectEntity.setProfessorEntity(null);
+        subjectEntity.setProfessor(null);
     }
 }

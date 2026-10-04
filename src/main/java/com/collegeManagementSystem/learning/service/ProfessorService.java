@@ -78,10 +78,11 @@ public class ProfessorService {
         return entityToResponse(savedProfessor);
     }
 
+    @Transactional
     public void deleteProfessorById(Long professorId) {
         ProfessorEntity professorEntity = professorRepository.findById(professorId)
                 .orElseThrow(()->new ResourceNotFoundException("Professor not found with ID : "+professorId));
-        for(SubjectEntity subject : new HashSet<>(professorEntity.getSubjectEntities())){
+        for(SubjectEntity subject : new HashSet<>(professorEntity.getSubjects())){
             professorEntity.removeSubject(subject);
         }
         professorRepository.deleteById(professorId);
