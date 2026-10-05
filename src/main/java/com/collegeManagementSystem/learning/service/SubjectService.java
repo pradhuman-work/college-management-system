@@ -4,17 +4,17 @@ import com.collegeManagementSystem.learning.dto.SubjectPatchDTO;
 import com.collegeManagementSystem.learning.dto.SubjectRequestDTO;
 import com.collegeManagementSystem.learning.dto.SubjectResponseDTO;
 import com.collegeManagementSystem.learning.entity.ProfessorEntity;
+import com.collegeManagementSystem.learning.entity.StudentEntity;
 import com.collegeManagementSystem.learning.entity.SubjectEntity;
 import com.collegeManagementSystem.learning.exception.ResourceNotFoundException;
 import com.collegeManagementSystem.learning.repository.ProfessorRepository;
 import com.collegeManagementSystem.learning.repository.SubjectRepository;
-import jakarta.validation.Valid;
-import org.jspecify.annotations.Nullable;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -89,8 +89,15 @@ public class SubjectService {
     @Transactional
     public void deleteSubject(Long subjectId){
         SubjectEntity subjectEntity = subjectRepository.findById(subjectId).orElseThrow(()->new ResourceNotFoundException("Subject Not found with Id : "+subjectId));
+        // Remove professor from the subjects
         if(subjectEntity.getProfessor()!=null){
             subjectEntity.getProfessor().removeSubject(subjectEntity);
+        }
+        // Remove subjects from the students
+        if(subjectEntity.getStudents()!=null){
+            for(StudentEntity student : new ArrayList<>(subjectEntity.getStudents())){
+                student.unenrollSubject(subjectEntity);
+            }
         }
         subjectRepository.delete(subjectEntity);
     }

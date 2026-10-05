@@ -34,4 +34,16 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(studentService.saveStudent(studentRequestDTO));
     }
 
+    @PostMapping(path = "/{studentId}/subjects/{subjectId}")
+    public ResponseEntity<StudentResponseDTO> enrollSubject(@PathVariable Long studentId,
+                                                                     @PathVariable Long subjectId){
+        return ResponseEntity.ok(studentService.enrollSubject(studentId, subjectId));
+    }
+
+    @DeleteMapping(path = "/{studentId}/subjects/{subjectId}")
+    public ResponseEntity<StudentResponseDTO> unenrollSubject(@PathVariable Long studentId,
+                                                                     @PathVariable Long subjectId){
+        return ResponseEntity.ok(studentService.unenrollSubject(studentId, subjectId));
+    }
+
 }
