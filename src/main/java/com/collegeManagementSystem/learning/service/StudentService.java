@@ -3,9 +3,11 @@ package com.collegeManagementSystem.learning.service;
 import com.collegeManagementSystem.learning.dto.StudentPatchDTO;
 import com.collegeManagementSystem.learning.dto.StudentRequestDTO;
 import com.collegeManagementSystem.learning.dto.StudentResponseDTO;
+import com.collegeManagementSystem.learning.entity.ProfessorEntity;
 import com.collegeManagementSystem.learning.entity.StudentEntity;
 import com.collegeManagementSystem.learning.entity.SubjectEntity;
 import com.collegeManagementSystem.learning.exception.ResourceNotFoundException;
+import com.collegeManagementSystem.learning.repository.ProfessorRepository;
 import com.collegeManagementSystem.learning.repository.StudentRepository;
 import com.collegeManagementSystem.learning.repository.SubjectRepository;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ public class StudentService {
     private final ModelMapper mapper;
     private final StudentRepository studentRepository;
     private final SubjectRepository subjectRepository;
+    private final ProfessorRepository professorRepository;
 
     @Transactional(readOnly = true)
     public StudentResponseDTO getStudentById(Long studentId){
@@ -81,13 +84,39 @@ public class StudentService {
         studentRepository.delete(studentEntity);
     }
 
+    @Transactional
+    public StudentResponseDTO assignProfessor(Long studentId, Long professorId){
+        StudentEntity studentEntity = studentRepository.findById(studentId).orElseThrow(()->new ResourceNotFoundException("Student not found with id : "+studentId));
+        ProfessorEntity professorEntity = professorRepository.findById(professorId).orElseThrow(() -> new ResourceNotFoundException("Professor Not Found With id : "+professorId));
+
+        studentEntity.addProfessor(professorEntity);
+        return entityToResponse(studentEntity);
+    }
+
+    @Transactional
+    public StudentResponseDTO unassignProfessor(Long studentId, Long professorId){
+        StudentEntity studentEntity = studentRepository.findById(studentId).orElseThrow(()->new ResourceNotFoundException("Student not found with id : "+studentId));
+        ProfessorEntity professorEntity = professorRepository.findById(professorId).orElseThrow(() -> new ResourceNotFoundException("Professor Not Found With id : "+professorId));
+
+        studentEntity.removeProfessor(professorEntity);
+        return entityToResponse(studentEntity);
+    }
+
     private StudentResponseDTO entityToResponse(StudentEntity studentEntity){
-        StudentResponseDTO studentResponseDTO = mapper.map(studentEntity, StudentResponseDTO.class);
+        StudentResponseDTO studentResponseDTO = new StudentResponseDTO();
+        studentResponseDTO.setId(studentEntity.getId());
+        studentResponseDTO.setName(studentEntity.getName());
         Set<Long> subjectIds = studentEntity.getSubjects()
                 .stream()
                 .map(subject -> subject.getId())
                 .collect(Collectors.toSet());
+        Set<Long> professorIds = studentEntity.getProfessors()
+                .stream()
+                .map(professor -> professor.getId())
+                .collect(Collectors.toSet());
+
         studentResponseDTO.setSubjectIds(subjectIds);
+        studentResponseDTO.setProfessorIds(professorIds);
         return studentResponseDTO;
     }
 

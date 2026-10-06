@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -12,4 +15,5 @@ import lombok.Setter;
 public class ProfessorResponseDTO {
     private Long id;
     private String title;
+    private Set<Long> studentIds = new HashSet<>();
 }

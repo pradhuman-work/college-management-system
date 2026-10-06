@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class ErrorResponse {
-    private HttpStatus status;
+    private int status;
     private String message;
     private LocalDateTime timestamp;
 }

@@ -4,10 +4,11 @@ import com.collegeManagementSystem.learning.dto.ProfessorPatchDTO;
 import com.collegeManagementSystem.learning.dto.ProfessorRequestDTO;
 import com.collegeManagementSystem.learning.dto.ProfessorResponseDTO;
 import com.collegeManagementSystem.learning.entity.ProfessorEntity;
+import com.collegeManagementSystem.learning.entity.StudentEntity;
 import com.collegeManagementSystem.learning.entity.SubjectEntity;
 import com.collegeManagementSystem.learning.exception.ResourceNotFoundException;
 import com.collegeManagementSystem.learning.repository.ProfessorRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.security.auth.Subject;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +34,7 @@ public class ProfessorService {
         return entityToResponse(savedProfessor);
     }
 
+    @Transactional(readOnly = true)
     public List<ProfessorResponseDTO> getAllProfessors(){
         List<ProfessorEntity> professorEntityList = professorRepository.findAll();
         return professorEntityList
@@ -42,6 +45,7 @@ public class ProfessorService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public ProfessorResponseDTO getProfessorById(Long professorId){
         ProfessorEntity professor = professorRepository.findById(professorId)
                 .orElseThrow(() -> new ResourceNotFoundException("Professor not found with id " + professorId));
@@ -49,7 +53,18 @@ public class ProfessorService {
     }
 
     private ProfessorResponseDTO entityToResponse(ProfessorEntity professorEntity){
-        return mapper.map(professorEntity, ProfessorResponseDTO.class);
+
+        ProfessorResponseDTO professorResponseDTO = new ProfessorResponseDTO();
+        professorResponseDTO.setId(professorEntity.getId());
+        professorResponseDTO.setTitle(professorEntity.getTitle());
+
+        Set<Long> studentIds = professorEntity.getStudents()
+                .stream()
+                .map(studentEntity -> studentEntity.getId())
+                .collect(Collectors.toSet());
+
+        professorResponseDTO.setStudentIds(studentIds);
+        return professorResponseDTO;
     }
 
     private ProfessorEntity requestToEntity(ProfessorRequestDTO professorRequestDTO){
@@ -85,7 +100,10 @@ public class ProfessorService {
         for(SubjectEntity subject : new HashSet<>(professorEntity.getSubjects())){
             professorEntity.removeSubject(subject);
         }
-        professorRepository.deleteById(professorId);
+        for(StudentEntity student : new HashSet<>(professorEntity.getStudents())){
+            student.removeProfessor(professorEntity);
+        }
+        professorRepository.delete(professorEntity);
     }
 }
 

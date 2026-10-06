@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException exception){
         ErrorResponse error = ErrorResponse.builder()
-                .status(HttpStatus.NOT_FOUND)
+                .status(HttpStatus.NOT_FOUND.value())
                 .message(exception.getMessage())
                 .timestamp(LocalDateTime.now())
                 .build();
@@ -25,7 +25,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorResponse> handleDataIntegrity(DataIntegrityViolationException exception){
         ErrorResponse errorResponse = ErrorResponse.builder()
-                .status(HttpStatus.CONFLICT)
+                .status(HttpStatus.CONFLICT.value())
                 .message("Operation violates a data constraint")
                 .timestamp(LocalDateTime.now())
                 .build();

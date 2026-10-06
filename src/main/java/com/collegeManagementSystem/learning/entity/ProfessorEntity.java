@@ -23,6 +23,9 @@ public class ProfessorEntity {
     @OneToMany(mappedBy = "professor") //Inverse Side
     private Set<SubjectEntity> subjects = new HashSet<>();
 
+    @ManyToMany(mappedBy = "professors")
+    private Set<StudentEntity> students = new HashSet<>();
+
     public void addSubject(SubjectEntity subjectEntity) {
         if(subjectEntity.getProfessor()!=null){
             subjectEntity.getProfessor().getSubjects().remove(subjectEntity);

@@ -14,4 +14,5 @@ public class StudentResponseDTO {
     private Long id;
     private String name;
     private Set<Long> subjectIds = new HashSet<>();
+    private Set<Long> professorIds = new HashSet<>();
 }

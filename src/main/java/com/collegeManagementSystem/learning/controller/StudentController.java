@@ -70,5 +70,18 @@ public class StudentController {
         return ResponseEntity.noContent().build();
     }
 
+    @PutMapping(path = "/{id}/professors/{professorId}")
+    public ResponseEntity<StudentResponseDTO> assignProfessor(
+            @PathVariable(name = "id") Long studentId,
+            @PathVariable(name = "professorId") Long professorId){
+        return ResponseEntity.ok(studentService.assignProfessor(studentId, professorId));
+    }
+
+    @DeleteMapping(path = "/{id}/professors/{professorId}")
+    public ResponseEntity<StudentResponseDTO> unassignProfessor(
+            @PathVariable(name = "id") Long studentId,
+            @PathVariable(name = "professorId") Long professorId){
+        return ResponseEntity.ok(studentService.unassignProfessor(studentId, professorId));
+    }
 
 }

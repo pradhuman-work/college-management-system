@@ -27,6 +27,14 @@ public class StudentEntity {
             inverseJoinColumns = @JoinColumn(name = "subject_id"))
     private Set<SubjectEntity> subjects = new HashSet<>();
 
+    @ManyToMany
+    @JoinTable(
+            name="student_professor",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "professor_id")
+    )
+    private Set<ProfessorEntity> professors = new HashSet<>();
+
     public void enrollSubject(SubjectEntity subject){
         // 1. add subject to this.subjects
         this.subjects.add(subject);
@@ -40,4 +48,15 @@ public class StudentEntity {
         // 2. remove this student from the subject's students
         subject.getStudents().remove(this);
     }
+
+    public void addProfessor(ProfessorEntity professorEntity){
+        this.professors.add(professorEntity);
+        professorEntity.getStudents().add(this);
+    }
+
+    public void removeProfessor(ProfessorEntity professorEntity){
+        this.professors.remove(professorEntity);
+        professorEntity.getStudents().remove(this);
+    }
+
 }
