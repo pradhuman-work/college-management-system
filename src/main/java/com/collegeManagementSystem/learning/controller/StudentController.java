@@ -1,5 +1,6 @@
 package com.collegeManagementSystem.learning.controller;
 
+import com.collegeManagementSystem.learning.dto.StudentPatchDTO;
 import com.collegeManagementSystem.learning.dto.StudentRequestDTO;
 import com.collegeManagementSystem.learning.dto.StudentResponseDTO;
 import com.collegeManagementSystem.learning.service.StudentService;
@@ -45,5 +46,29 @@ public class StudentController {
                                                                      @PathVariable Long subjectId){
         return ResponseEntity.ok(studentService.unenrollSubject(studentId, subjectId));
     }
+
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<StudentResponseDTO> putStudent(
+            @Valid @RequestBody StudentRequestDTO studentRequestDTO,
+            @PathVariable(name="id") Long studentId){
+        return ResponseEntity.ok(studentService.updateStudent(studentId, studentRequestDTO));
+    }
+
+    @PatchMapping(path = "/{id}")
+    public ResponseEntity<StudentResponseDTO> patchStudent(
+            @Valid @RequestBody StudentPatchDTO studentPatchDTO,
+            @PathVariable(name = "id") Long studentId
+            ){
+        return ResponseEntity.ok(studentService.patchStudent(studentId, studentPatchDTO));
+    }
+
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Void> deleteStudent(
+            @PathVariable(name = "id") Long studentId
+    ){
+        studentService.deleteStudent(studentId);
+        return ResponseEntity.noContent().build();
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package com.collegeManagementSystem.learning.service;
 
+import com.collegeManagementSystem.learning.dto.StudentPatchDTO;
 import com.collegeManagementSystem.learning.dto.StudentRequestDTO;
 import com.collegeManagementSystem.learning.dto.StudentResponseDTO;
 import com.collegeManagementSystem.learning.entity.StudentEntity;
@@ -56,6 +57,28 @@ public class StudentService {
         SubjectEntity subjectEntity = subjectRepository.findById(subjectId).orElseThrow(()->new ResourceNotFoundException("Subject not found with id : "+subjectId));
         studentEntity.unenrollSubject(subjectEntity);
         return entityToResponse(studentEntity);
+    }
+
+    @Transactional
+    public StudentResponseDTO updateStudent(Long studentId, StudentRequestDTO studentRequestDTO){
+        StudentEntity studentEntity = studentRepository.findById(studentId).orElseThrow(()->new ResourceNotFoundException("Student not found with id : "+studentId));
+        studentEntity.setName(studentRequestDTO.getName());
+        return entityToResponse(studentEntity);
+    }
+
+    @Transactional
+    public StudentResponseDTO patchStudent(Long studentId, StudentPatchDTO studentPatchDTO){
+        StudentEntity studentEntity = studentRepository.findById(studentId).orElseThrow(()->new ResourceNotFoundException("Student not found with id : "+studentId));
+        if(studentPatchDTO.getName()!=null){
+            studentEntity.setName(studentPatchDTO.getName());
+        }
+        return entityToResponse(studentEntity);
+    }
+
+    @Transactional
+    public void deleteStudent(Long studentId){
+        StudentEntity studentEntity = studentRepository.findById(studentId).orElseThrow(()->new ResourceNotFoundException("Student not found with id : "+studentId));
+        studentRepository.delete(studentEntity);
     }
 
     private StudentResponseDTO entityToResponse(StudentEntity studentEntity){
