@@ -1,8 +1,10 @@
 package com.collegeManagementSystem.learning.service;
 
+import com.collegeManagementSystem.learning.dto.AdmissionRecordResponseDTO;
 import com.collegeManagementSystem.learning.dto.StudentPatchDTO;
 import com.collegeManagementSystem.learning.dto.StudentRequestDTO;
 import com.collegeManagementSystem.learning.dto.StudentResponseDTO;
+import com.collegeManagementSystem.learning.entity.AdmissionRecordEntity;
 import com.collegeManagementSystem.learning.entity.ProfessorEntity;
 import com.collegeManagementSystem.learning.entity.StudentEntity;
 import com.collegeManagementSystem.learning.entity.SubjectEntity;
@@ -15,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -114,6 +118,12 @@ public class StudentService {
                 .stream()
                 .map(professor -> professor.getId())
                 .collect(Collectors.toSet());
+
+        if(studentEntity.getAdmissionRecord()!=null){
+            studentResponseDTO.setAdmissionRecordId(studentEntity.getAdmissionRecord().getId());
+        }else{
+            studentResponseDTO.setAdmissionRecordId(null);
+        }
 
         studentResponseDTO.setSubjectIds(subjectIds);
         studentResponseDTO.setProfessorIds(professorIds);

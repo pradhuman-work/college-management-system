@@ -35,6 +35,9 @@ public class StudentEntity {
     )
     private Set<ProfessorEntity> professors = new HashSet<>();
 
+    @OneToOne(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private AdmissionRecordEntity admissionRecord;
+
     public void enrollSubject(SubjectEntity subject){
         // 1. add subject to this.subjects
         this.subjects.add(subject);
@@ -59,4 +62,8 @@ public class StudentEntity {
         professorEntity.getStudents().remove(this);
     }
 
+    public void assignAdmissionRecord(AdmissionRecordEntity admissionRecord) {
+        this.admissionRecord = admissionRecord;
+        admissionRecord.setStudent(this);
+    }
 }
