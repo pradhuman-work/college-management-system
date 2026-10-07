@@ -9,12 +9,10 @@ import com.collegeManagementSystem.learning.entity.SubjectEntity;
 import com.collegeManagementSystem.learning.exception.ResourceNotFoundException;
 import com.collegeManagementSystem.learning.repository.ProfessorRepository;
 import org.springframework.transaction.annotation.Transactional;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
-import javax.security.auth.Subject;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -72,7 +70,7 @@ public class ProfessorService {
     }
 
     @Transactional
-    public ProfessorResponseDTO updateEntireProfessorById(@Valid ProfessorRequestDTO professorRequestDTO, Long professorId) {
+    public ProfessorResponseDTO updateEntireProfessorById(ProfessorRequestDTO professorRequestDTO, Long professorId) {
         ProfessorEntity professorEntity = professorRepository.findById(professorId)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Professor Not Found With id : "+professorId)

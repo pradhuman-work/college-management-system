@@ -3,7 +3,6 @@ package com.collegeManagementSystem.learning.controller;
 import com.collegeManagementSystem.learning.dto.SubjectPatchDTO;
 import com.collegeManagementSystem.learning.dto.SubjectRequestDTO;
 import com.collegeManagementSystem.learning.dto.SubjectResponseDTO;
-import com.collegeManagementSystem.learning.repository.SubjectRepository;
 import com.collegeManagementSystem.learning.service.SubjectService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
